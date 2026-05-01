@@ -90,7 +90,7 @@ with col1:
 
 curenti_x = np.logspace(1, 4.7, 4000) 
 
-fig_graph, ax = plt.subplots(figsize=(5, 3)) 
+fig_graph, ax = plt.subplots(figsize=(2, 1)) 
 
 for r in relays_data:
     timpi_y = calculate_curve(
