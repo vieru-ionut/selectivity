@@ -129,7 +129,7 @@ ax.set_xlabel(f"Current (A) at {ref_voltage} kV level")
 ax.set_ylabel("Operating Time (s)")
 ax.legend(fontsize=10)
 
-st.pyplot(fig_graph)
+st.pyplot(fig_graph, use_container_width=False)
 
 # --- PDF EXPORT ---
 pdf_buffer = io.BytesIO()
