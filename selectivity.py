@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.ticker import ScalarFormatter
+from matplotlib.ticker import FormatStrFormatter
 import io
 
 st.set_page_config(page_title="Relay Coordination", layout="wide")
@@ -13,13 +13,14 @@ def calculate_curve(i_vector, curve_type, i_set, tms, t_pickup, i_dt, t_dt, i_in
         if i <= i_set:
             times.append(np.nan)
         elif i >= i_inst:
-            # AICI: Am modificat timpul de la 0.02 la 0.001 pentru a pica până la baza axei
+            # Curba cade direct la 0.001 secunde (limita de jos a graficului)
             times.append(0.001) 
         elif i >= i_dt:
             times.append(t_dt)
         elif curve_type == "DT":
             times.append(t_pickup)
         else:
+            # IEC Normal Inverse
             t = (0.14 * tms) / ((i / i_set)**0.02 - 1)
             times.append(t)
     return times
@@ -35,7 +36,7 @@ st.sidebar.markdown("---")
 relays_data = []
 
 # Culori predefinite
-default_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b']
+default_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
 for index in range(int(num_relays)):
     st.sidebar.markdown(f"### Relay {index + 1}")
@@ -60,7 +61,7 @@ for index in range(int(num_relays)):
         t_pickup = st.sidebar.number_input(f"T> Delay (s)", min_value=0.001, max_value=5.000, value=1.000, step=0.01, format="%.3f", key=f"tpick_{index}")
 
     i_dt = st.sidebar.number_input(f"I>> Short Circuit (A)", min_value=50.0, max_value=15000.0, value=1500.0, step=10.0, key=f"idt_{index}")
-    t_dt = st.sidebar.number_input(f"T>> Delay (s)", min_value=0.01, max_value=2.00, value=0.20, step=0.01, key=f"tdt_{index}")
+    t_dt = st.sidebar.number_input(f"T>> Delay (s)", min_value=0.01, max_value=5.00, value=0.20, step=0.01, key=f"tdt_{index}")
     i_inst = st.sidebar.number_input(f"I>>> Instantaneous (A)", min_value=100.0, max_value=50000.0, value=4000.0, step=50.0, key=f"iinst_{index}")
     
     relays_data.append({
@@ -88,7 +89,7 @@ col1, col2 = st.columns([3, 1])
 with col1:
     st.markdown(f"**Note:** Currents on the graph are mapped to the reference voltage of **{ref_voltage} kV**.")
 
-curenti_x = np.logspace(1, 4.7, 4000) 
+curenti_x = np.logspace(1, 5, 4000) 
 
 fig_graph, ax = plt.subplots(figsize=(10, 5.5)) 
 
@@ -113,15 +114,15 @@ for r in relays_data:
 ax.set_xscale('log')
 ax.set_yscale('log')
 
-for axis in [ax.xaxis, ax.yaxis]:
-    formatter = ScalarFormatter()
-    formatter.set_scientific(False)
-    axis.set_major_formatter(formatter)
+# --- Eliminarea notației științifice și afișarea exactă a zecimalelor ---
+ax.xaxis.set_major_formatter(FormatStrFormatter('%g'))
+ax.yaxis.set_major_formatter(FormatStrFormatter('%g'))
+# ------------------------------------------------------------------------
 
 ax.grid(True, which="major", ls="-", color="gray", alpha=0.8, linewidth=0.8)
 ax.grid(True, which="minor", ls="--", color="gray", alpha=0.5, linewidth=0.5)
 
-# AICI: Am ajustat axa Y de la 0.001 la 1000 exact ca în graficul din Excel
+# Limitele graficului identice cu Excel
 ax.set_ylim(0.001, 1000)
 ax.set_xlim(50, 100000)
 ax.set_xlabel(f"Current (A) at {ref_voltage} kV level")
