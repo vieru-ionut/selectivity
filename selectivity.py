@@ -120,8 +120,11 @@ for axis in [ax.xaxis, ax.yaxis]:
     axis.set_major_formatter(formatter)
 # --------------------------------------------------------------
 
-ax.grid(True, which="both", ls="-", color="lightgray", alpha=0.7)
-ax.grid(True, which="minor", ls=":", color="lightgray", alpha=0.4)
+# Grila principală (liniile majore) - mai închisă și mai conturată
+ax.grid(True, which="major", ls="-", color="gray", alpha=0.8, linewidth=0.8)
+
+# Grila secundară (liniile minore logaritmice) - tip punctat, ușor mai vizibilă
+ax.grid(True, which="minor", ls="--", color="gray", alpha=0.5, linewidth=0.5)
 
 ax.set_ylim(0.01, 100)
 ax.set_xlim(50, 50000)
