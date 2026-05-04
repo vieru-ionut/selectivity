@@ -25,7 +25,7 @@ def calculate_curve(i_vector, curve_type, i_set, tms, t_pickup, i_dt, t_dt, i_in
             times.append(t)
     return times
 
-# --- SIDEBAR ---
+
 st.sidebar.title("System Parameters")
 
 ref_voltage = st.sidebar.number_input("Graph Reference Voltage (kV)", value=20.0, step=1.0)
@@ -35,7 +35,7 @@ st.sidebar.markdown("---")
 
 relays_data = []
 
-# Culori predefinite
+
 default_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
 for index in range(int(num_relays)):
@@ -82,7 +82,7 @@ for index in range(int(num_relays)):
     })
     st.sidebar.markdown("---")
 
-# --- MAIN PAGE & GRAPH ---
+
 st.title("Protection Relay Selectivity")
 
 col1, col2 = st.columns([3, 1])
@@ -114,7 +114,7 @@ for r in relays_data:
 ax.set_xscale('log')
 ax.set_yscale('log')
 
-# --- Eliminarea notației științifice și afișarea exactă a zecimalelor ---
+
 ax.xaxis.set_major_formatter(FormatStrFormatter('%g'))
 ax.yaxis.set_major_formatter(FormatStrFormatter('%g'))
 # ------------------------------------------------------------------------
@@ -122,7 +122,7 @@ ax.yaxis.set_major_formatter(FormatStrFormatter('%g'))
 ax.grid(True, which="major", ls="-", color="gray", alpha=0.8, linewidth=0.8)
 ax.grid(True, which="minor", ls="--", color="gray", alpha=0.5, linewidth=0.5)
 
-# Limitele graficului identice cu Excel
+
 ax.set_ylim(0.001, 1000)
 ax.set_xlim(50, 100000)
 ax.set_xlabel(f"Current (A) at {ref_voltage} kV level")
@@ -131,7 +131,7 @@ ax.legend(fontsize=10)
 
 st.pyplot(fig_graph, use_container_width=False)
 
-# --- PDF EXPORT ---
+
 pdf_buffer = io.BytesIO()
 with PdfPages(pdf_buffer) as pdf:
     pdf.savefig(fig_graph, bbox_inches='tight')
