@@ -62,7 +62,7 @@ for index in range(int(num_relays)):
 
     i_dt = st.sidebar.number_input(f"I>> Short Circuit (A)", min_value=50.0, max_value=15000.0, value=1500.0, step=10.0, key=f"idt_{index}")
     t_dt = st.sidebar.number_input(f"T>> Delay (s)", min_value=0.01, max_value=5.00, value=0.20, step=0.01, key=f"tdt_{index}")
-
+    i_inst = st.sidebar.number_input(f"I>>> Instantaneous (A)", min_value=100.0, max_value=150000.0, value=4000.0, step=50.0, key=f"iinst_{index}")
     
     relays_data.append({
         "name": name,
